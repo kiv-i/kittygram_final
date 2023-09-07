@@ -1,26 +1,56 @@
-#  Как работать с репозиторием финального задания
+# Kittygram
 
-## Что нужно сделать
+### О проекте
 
-Настроить запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
+Kittygram — сервис для публикации данных о котиках. В нем можно добавить 
+котиков, прикрепить изображение (не более 20МБ), выбрать цвет, выбрать 
+или добавить достижения.
 
-## Как проверить работу с помощью автотестов
+Это проект, который состоит из бэкенд-приложения на Django 
+и фронтенд-приложения на React.
 
-В корне репозитория создайте файл tests.yml со следующим содержимым:
-```yaml
-repo_owner: ваш_логин_на_гитхабе
-kittygram_domain: полная ссылка (https://доменное_имя) на ваш проект Kittygram
-taski_domain: полная ссылка (https://доменное_имя) на ваш проект Taski
-dockerhub_username: ваш_логин_на_докерхабе
+### Использованные технологии
+
+* [Python](https://www.python.org/)
+* [React](https://react.dev/)
+* [Django](https://www.djangoproject.com/)
+* [Django REST framework](https://www.django-rest-framework.org/)
+* [Djoser](https://djoser.readthedocs.io/en/latest/getting_started.html)
+
+### Примеры использования
+
+Приложение доступно по адресу: https://kotygram.ddns.net/  
+Где можно зарегистрироваться.  
+Также доступно API: https://kotygram.ddns.net/api/  
+Регистрация пользователя происходит при помощи библиотеки Djoser: 
+
+```
+POST: https://kotygram.ddns.net/api/users/
 ```
 
-Скопируйте содержимое файла `.github/workflows/main.yml` в файл `kittygram_workflow.yml` в корневой директории проекта.
+После этого необходимо получить токен:
 
-Для локального запуска тестов создайте виртуальное окружение, установите в него зависимости из backend/requirements.txt и запустите в корневой директории проекта `pytest`.
+```
+POST: https://kotygram.ddns.net/api/token/login/
+```
 
-## Чек-лист для проверки перед отправкой задания
+Дополнительные эндпоинты в документации [Djoser](https://djoser.readthedocs.io/en/latest/base_endpoints.html)  
 
-- Проект Taski доступен по доменному имени, указанному в `tests.yml`.
-- Проект Kittygram доступен по доменному имени, указанному в `tests.yml`.
-- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
-- В корне проекта есть файл `kittygram_workflow.yml`.
+Доступ через auth-token.  
+
+Получить список котиков:
+
+```
+GET: https://kotygram.ddns.net/api/cats/
+```
+
+Получить список достижений:
+
+```
+GET: https://kotygram.ddns.net/api/achievements/
+```
+Так же доступны POST, PUT, PATCH, DELETE запросы.
+
+### Авторы
+
+* [Константин Иванов](https://github.com/kiv-i)
