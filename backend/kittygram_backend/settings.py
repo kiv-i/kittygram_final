@@ -1,13 +1,16 @@
 import os
 from pathlib import Path
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -115,3 +118,12 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 
 }
+
+sentry_sdk.init(
+    dsn='https://517cc9856f7d04c2d0da86147f3d7c1b@o4505725695950848.ingest.sentry.io/4505725704994816',
+    integrations=[
+        DjangoIntegration(),
+    ],
+    traces_sample_rate=1.0,
+    send_default_pii=True
+)
