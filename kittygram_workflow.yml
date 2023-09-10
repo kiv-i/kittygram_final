@@ -44,6 +44,7 @@ jobs:
           POSTGRES_DB: django_db
           DB_HOST: 127.0.0.1
           DB_PORT: 5432
+          SECRET_KEY: django-secret-key
         run: |
           python -m flake8 backend/
           cd backend/
@@ -71,7 +72,7 @@ jobs:
         with:
           context: ./backend/
           push: true
-          tags: kivikot/kittygram_backend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_backend:latest
 
   frontend_tests:
     runs-on: ubuntu-latest
@@ -117,7 +118,7 @@ jobs:
         with:
           context: ./frontend/
           push: true
-          tags: kivikot/kittygram_frontend:latest 
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_frontend:latest 
 
   build_gateway_and_push_to_docker_hub:
     name: Push Gateway Docker Image To DockerHub
@@ -140,7 +141,7 @@ jobs:
         with:
           context: ./nginx/
           push: true
-          tags: kivikot/kittygram_gateway:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_gateway:latest
 
   deploy:
     name: Deploy Kittygram Project
@@ -171,15 +172,16 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            cd taski/
+            cd kittygram/
             sudo docker compose -f docker-compose.production.yml pull
             sudo docker compose -f docker-compose.production.yml down
             sudo docker compose -f docker-compose.production.yml up -d
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
             sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/static/. /static/static/
+            sudo docker system prune -af
 
-  send_massege:
+  send_message:
     runs-on: ubuntu-latest
     needs: deploy
     steps:
